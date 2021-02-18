@@ -1,24 +1,28 @@
 #include "Cell.h"
 #include <iostream>
 
-Cell::Cell(bool mine)
+Cell::Cell()
 {
-    _isAMine = mine;
-    _isDiscovered = false;
-    _neighbours = 0;
+    _Mine = false;
+    _Discovered = false;
+    _Neighbours = 0;
 }
 Cell::~Cell()
 {
 
 }
+void Cell::addMine(bool mine)
+{
+    _Mine = mine;
+}
 int Cell::getNeighbours()
 {
-    return _neighbours;
+    return _Neighbours;
 }
 void Cell::getNeighbours(std::vector<std::vector<Cell>> &grid, int x, int y)
 {
-    _neighbours = 0;
-    if (_isAMine)
+    _Neighbours = 0;
+    if (_Mine)
         return;
     for (int i = -1; i < 2; i++)
     {
@@ -27,24 +31,24 @@ void Cell::getNeighbours(std::vector<std::vector<Cell>> &grid, int x, int y)
             if (x + i >= 0 && y + j >= 0 && x + i < grid.size() && y + j < grid[x + i].size())
             {
                 if (grid[x + i][y + j].isAMine())
-                    _neighbours++;
+                    _Neighbours++;
             }
         }
     }
 }
 bool Cell::isDiscovered()
 {
-    return _isDiscovered;
+    return _Discovered;
 }
 bool Cell::isAMine()
 {
-    return _isAMine;
+    return _Mine;
 }
 bool Cell::discover(std::vector<std::vector<Cell>> &grid, int x, int y)
 {
-    _isDiscovered = true;
     if (isAMine())
         return true;
+    _Discovered = true;
     if (hasNeighbours())
         return false;
     for (int i = -1; i < 2; i++)
@@ -62,5 +66,13 @@ bool Cell::discover(std::vector<std::vector<Cell>> &grid, int x, int y)
 }
 bool Cell::hasNeighbours()
 {
-    return _neighbours > 0 ? true : false;
+    return _Neighbours > 0 ? true : false;
+}
+bool Cell::isFlagged()
+{
+    return _Flag;
+}
+void Cell::flag()
+{
+    _Flag = (_Flag != true);
 }
